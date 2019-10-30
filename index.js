@@ -3,7 +3,12 @@
  * Module dependencies.
  */
 
-var client = require('redis').createClient;
+// Added bluebird to promisify node-redis methods.
+const bluebird = require('bluebird')
+const nodeRedis = require('redis')
+bluebird.promisifyAll(nodeRedis)
+
+var client = nodeRedis.createClient;
 var parser = require('socket.io-parser');
 var msgpack = require('notepack.io');
 var debug = require('debug')('socket.io-emitter');
@@ -143,4 +148,29 @@ Emitter.prototype.emit = function(){
   this._flags = {};
 
   return this;
+};
+
+Emitter.prototype.emitAsync = function(){
+  // packet
+  var args = Array.prototype.slice.call(arguments);
+  var packet = { type: parser.EVENT, data: args, nsp: this.nsp };
+
+  var opts = {
+    rooms: this._rooms,
+    flags: this._flags
+  };
+
+  var msg = msgpack.encode([uid, packet, opts]);
+  var channel = this.channel;
+  if (opts.rooms && opts.rooms.length === 1) {
+    channel += opts.rooms[0] + '#';
+  }
+  debug('publishing message to channel %s', channel);
+  const publishPromise = this.redis.publishAsync(channel, msg)
+
+  // reset state
+  this._rooms = [];
+  this._flags = {};
+
+  return publishPromise;
 };

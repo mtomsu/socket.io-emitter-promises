@@ -1,6 +1,6 @@
 {
   "name": "socket.io-emitter",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "",
   "license": "MIT",
   "repository": {
@@ -14,6 +14,7 @@
     "test": "make test"
   },
   "dependencies": {
+    "bluebird": "^3.7.1",
     "debug": "~3.1.0",
     "notepack.io": "~2.1.0",
     "redis": "2.6.3",
