@@ -1,11 +1,11 @@
 {
-  "name": "socket.io-emitter",
+  "name": "socket.io-emitter-promises",
   "version": "3.1.2",
   "description": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/socketio/socket.io-emitter.git"
+    "url": "https://github.com/mtomsu/socket.io-emitter-promises.git"
   },
   "files": [
     "index.js"
